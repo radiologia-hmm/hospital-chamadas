@@ -1,0 +1,156 @@
+:root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-light: #243044;
+    --bg-alt: #172033;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0284c7;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 20px;
+    box-shadow: 0 0 10px #0005;
+    border-radius: 0 0 10px 10px;
+}
+
+.btn-sair {
+    padding: 10px 20px;
+}
+
+/* GRID PRINCIPAL */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    padding: 25px;
+}
+
+.col-esquerda,
+.col-direita {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* CARDS */
+.card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #0004;
+}
+
+.card h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #243044;
+}
+
+/* BOTÕES */
+.btn {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: white;
+    transition: 0.2s;
+}
+
+.btn-lg {
+    font-size: 16px;
+    padding: 14px;
+}
+
+.btn-success {
+    background: var(--success);
+}
+
+.btn-warning {
+    background: var(--warning);
+    color: #181818;
+}
+
+.btn-info {
+    background: var(--info);
+}
+
+.btn-danger {
+    background: var(--danger);
+}
+
+.btn:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+}
+
+/* LISTA FILA */
+.lista-fila .item {
+    padding: 12px;
+    background: var(--bg-card-light);
+    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 5px #0003;
+}
+
+.vazio {
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========= FORM PADRONIZADO (igual recepção) ========== */
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+}
+
+.btn-lg {
+    padding: 12px 18px;
+    font-size: 17px;
+    font-weight: 600;
+}

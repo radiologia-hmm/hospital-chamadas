@@ -1,0 +1,76 @@
+:root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-light: #243044;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --danger: #ef4444;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    padding: 20px;
+}
+
+.card {
+    background: var(--bg-card);
+    width: 100%;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 14px #0006;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+}
+
+input,
+select {
+    width: 90%;
+    padding: 14px;
+    background: var(--bg-card-light);
+    color: var(--text);
+    border-radius: 6px;
+    border: 1px solid #2d3a50;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    background: var(--accent);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #60a5fa;
+}
+
+.mensagem {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.mensagem.erro {
+    color: var(--danger);
+}

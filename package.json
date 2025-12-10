@@ -1,0 +1,15 @@
+{
+  "name": "hospital-chamada-pacientes_3.0",
+  "version": "1.0.0",
+  "description": "Aplicação web estática para gerenciar chamadas de pacientes em postos/consultórios de um hospital ou unidade de saúde. Utiliza Firestore (modo compat) para armazenar a fila, registrar chamadas e transmitir atualizações em tempo real para o painel e as salas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  }
+}

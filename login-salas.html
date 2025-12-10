@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com;">
+    <title>Login da Sala</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="static/css/login-salas.css">
+</head>
+
+<body>
+
+    <div class="login-container card">
+
+        <h1>🏥 Acesso à Sala</h1>
+
+        <div class="form-group">
+            <label for="select-sala">Selecione a Sala</label>
+            <select id="select-sala">
+                <option value="">Escolha…</option>
+                <option value="triagem">Triagem</option>
+                <option value="consultorio1">Consultório 1</option>
+                <option value="consultorio2">Consultório 2</option>
+                <option value="consultorio3">Consultório 3</option>
+                <option value="raiox">Sala de Raio-X</option>
+                <option value="sutura">Sala de Sutura</option>
+                <option value="medicacao">Sala de Medicação</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha da Sala</label>
+            <input type="password" id="senha" placeholder="Digite a senha">
+        </div>
+
+        <button id="btn-entrar" class="btn btn-primary btn-lg">Entrar</button>
+
+        <div id="msg-login" class="mensagem"></div>
+    </div>
+
+    <!-- Firebase (compat) required for Auth login -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Configuração do Firebase -->
+    <script src="static/js/firebase-config.js"></script>
+
+    <script src="static/js/login-salas.js"></script>
+</body>
+</html>

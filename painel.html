@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Chamadas - HMM</title>
+
+    <!-- CSS ORIGINAL -->
+    <link rel="stylesheet" href="static/css/painel.css">
+
+    <!-- Ícone -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🏥</text></svg>">
+</head>
+<body>
+
+<div class="painel-container">
+
+    <!-- Cabeçalho -->
+    <header class="painel-header">
+        <h1>Sistema de Chamadas - HMM</h1>
+
+        <div class="status-conexao">
+            <div id="status-dot" class="status-dot desconectado"></div>
+            <span id="status-texto">Conectando...</span>
+        </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="painel-main">
+
+        <!-- Seção principal da chamada -->
+        <section class="secao-chamada-principal">
+
+            <div class="chamada-display">
+
+                <!-- Nome -->
+                <div class="display-senha display-principal">
+                    <span class="label">PACIENTE ATUAL</span>
+                    <div id="nome-grande" class="senha-grande">--</div>
+                </div>
+
+                <!-- Sala -->
+                <div class="display-sala display-principal">
+                    <span class="label">SALA / CONSULTÓRIO</span>
+                    <div id="sala-grande" class="sala-grande">--</div>
+                </div>
+            </div>
+
+            <!-- Hora da chamada -->
+            <div class="info-chamada">
+                <div class="info-item">
+                    <span class="label">Hora:</span>
+                    <span id="hora-chamada" class="valor">--:--:--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fila de próximos pacientes -->
+        <section class="secao-fila-espera">
+            <h2>⏳ PRÓXIMOS PACIENTES</h2>
+            <div id="lista-proximos" class="lista-proximos">
+                <p class="vazio">Nenhum paciente aguardando</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="painel-footer">
+        Última atualização: <span id="ultima-atualizacao">--:--:--</span>
+    </footer>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<!-- Configuração do Firebase -->
+<script src="static/js/firebase-config.js"></script>
+
+<!-- Funções utilitárias -->
+<script src="static/js/firestore-utils.js"></script>
+
+<!-- Script do painel (versão Firebase) -->
+<script>
+
+// Referências DOM
+const nomeGrande     = document.getElementById("nome-grande");
+const salaGrande     = document.getElementById("sala-grande");
+const horaChamadaEl  = document.getElementById("hora-chamada");
+const statusDot      = document.getElementById("status-dot");
+const statusTexto    = document.getElementById("status-texto");
+const listaProximos  = document.getElementById("lista-proximos");
+const ultimaAtual    = document.getElementById("ultima-atualizacao");
+
+// Áudio
+let synth = window.speechSynthesis;
+
+// Helper fala pt-BR mais natural
+function speakPTBR(text) {
+    const speak = () => {
+        const voices = window.speechSynthesis.getVoices();
+        let voice = voices.find(v => /pt-BR|pt/.test(v.lang) && /Google|Microsoft|Azure|Brasil|Brazil|Br/i.test(v.name))
+            || voices.find(v => /pt-BR|pt/.test(v.lang))
+            || voices[0];
+
+        const utt = new SpeechSynthesisUtterance(text);
+        utt.lang = 'pt-BR';
+        if (voice) utt.voice = voice;
+        utt.rate = 0.98;
+        utt.pitch = 1.0;
+        utt.volume = 1.0;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utt);
+    };
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', speak, { once: true });
+    } else {
+        speak();
+    }
+}
+
+/* ============================================================
+   Atualizar status de conexão
+============================================================ */
+function atualizarStatus(conectado) {
+    if (conectado) {
+        statusDot.classList.remove("desconectado");
+        statusDot.classList.add("conectado");
+        statusTexto.textContent = "Conectado";
+    } else {
+        statusDot.classList.remove("conectado");
+        statusDot.classList.add("desconectado");
+        statusTexto.textContent = "Desconectado";
+    }
+}
+
+/* ============================================================
+   1. Listener da última chamada
+============================================================ */
+listenUltimaChamada((doc) => {
+    atualizarStatus(true);
+
+    if (!doc.exists) return;
+
+    const data = doc.data();
+
+    // Atualizar painel
+    nomeGrande.textContent = data.nomePublico || "--";
+    const nomesFalados = {
+        triagem: "Triagem",
+        consultorio1: "Consultório 1",
+        consultorio2: "Consultório 2",
+        consultorio3: "Consultório 3",
+        raiox: "Raio-X",
+        sutura: "Sutura",
+        medicacao: "Medicação"
+    };
+
+    const salaLabel = nomesFalados[data.salaDestino] || data.salaDestino || "--";
+    salaGrande.textContent = salaLabel;
+
+    const hora = data.hora?.toDate().toLocaleTimeString("pt-BR") || "--:--:--";
+    horaChamadaEl.textContent = hora;
+
+    ultimaAtual.textContent = hora;
+
+    // Fazer anúncio por voz (NOME COMPLETO!)
+    if (data.nomeCompleto) {
+        const frase = `Paciente ${data.nomeCompleto}, dirigir-se à ${salaLabel}.`;
+        speakPTBR(frase);
+    }
+
+    // Efeito visual
+    document.body.classList.add("nova-chamada");
+    setTimeout(() => document.body.classList.remove("nova-chamada"), 3000);
+});
+
+/* ============================================================
+   2. Listener da fila completa (para próximos pacientes)
+============================================================ */
+listenFilaCompleta((snapshot) => {
+    atualizarStatus(true);
+
+    const pacientes = [];
+    snapshot.forEach(doc => pacientes.push(doc.data()));
+
+    const aguardando = pacientes.filter(p => p.status === "aguardando");
+
+    if (aguardando.length === 0) {
+        listaProximos.innerHTML = `<p class="vazio">Nenhum paciente aguardando</p>`;
+        return;
+    }
+
+    listaProximos.innerHTML = aguardando
+        .slice(0, 5)
+        .map((p, i) => `
+            <div class="item-proximo">
+                <div class="item-proximo-numero">${i + 1}</div>
+                <div class="item-proximo-info">
+                    <div class="item-proximo-nome">${p.nomePublico}</div>
+                    <div class="item-proximo-sala">${p.salaDestino}</div>
+                </div>
+            </div>
+        `)
+        .join("");
+});
+
+/* ============================================================
+   Timer de atualização
+============================================================ */
+setInterval(() => {
+    ultimaAtual.textContent = new Date().toLocaleTimeString("pt-BR");
+}, 1000);
+
+</script>
+</body>
+</html>

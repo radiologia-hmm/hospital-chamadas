@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com;">
+    <title>Sala - Sistema de Chamadas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="static/css/sala.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="static/js/firebase-config.js"></script>
+    <script src="static/js/firestore-utils.js"></script>
+</head>
+
+<body>
+
+    <header class="header">
+        <h1 id="titulo-sala">Sala</h1>
+        <button id="btn-sair" class="btn btn-danger btn-sair">Sair</button>
+    </header>
+
+    <main class="main-grid">
+
+        <!-- COLUNA ESQUERDA -->
+        <section class="col-esquerda">
+
+            <!-- PACIENTE ATUAL -->
+            <div class="card">
+                <h2>👤 Paciente Atual</h2>
+                <div id="paciente-atual" class="paciente-atual">
+                    <p class="vazio">Nenhum paciente chamado</p>
+                </div>
+            </div>
+
+            <!-- CHAMAR PRÓXIMO -->
+            <div class="card">
+                <h2>📢 Chamar Próximo</h2>
+                <button id="btn-chamar-proximo" class="btn btn-success btn-lg">➡ Chamar Próximo</button>
+                <div id="msg-chamar" class="mensagem"></div>
+            </div>
+
+            <!-- FILA DA SALA -->
+            <div class="card">
+                <h2>📋 Fila da Sala</h2>
+                <div id="fila-sala" class="lista-fila">
+                    <p class="vazio">Nenhum paciente aguardando</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- COLUNA DIREITA -->
+        <section class="col-direita">
+
+            <!-- RECHAMAR -->
+            <div class="card">
+                <h2>🔄 Repetir Última Chamada</h2>
+                <button id="btn-rechamar" class="btn btn-warning btn-lg">🔁 Repetir Última Chamada</button>
+
+                <div id="ultima-chamada" class="ultima-chamada card-sub">
+                    <p class="vazio">Nenhuma chamada registrada</p>
+                </div>
+            </div>
+
+            <!-- REENVIAR PACIENTE — LAYOUT IGUAL À RECEPÇÃO -->
+            <div class="card">
+                <h2>📤 Reenviar para Nova Sala</h2>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label>Nome do Paciente:</label>
+                        <input id="nome-reeviar" class="input" placeholder="Ex.: Maria Silva">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nova Sala:</label>
+                        <select id="nova-sala" class="input">
+                            <option value="">Selecione…</option>
+                            <option value="triagem">Triagem</option>
+                            <option value="consultorio1">Consultório 1</option>
+                            <option value="consultorio2">Consultório 2</option>
+                            <option value="consultorio3">Consultório 3</option>
+                            <option value="raio-x">Sala de Raio-X</option>
+                            <option value="sutura">Sala de Sutura</option>
+                            <option value="medicacao">Sala de Medicação</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button id="btn-enviar-nova-sala" class="btn btn-info btn-lg" style="margin-top:12px">
+                    📤 Reenviar
+                </button>
+
+                <div id="msg-reenviar" class="mensagem"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="static/js/sala.js"></script>
+</body>
+</html>

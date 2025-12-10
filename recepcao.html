@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepção - Sistema de Chamada de Pacientes</title>
+
+    <!-- CSS Modernizado -->
+    <link rel="stylesheet" href="static/css/recepcao.css">
+
+    <!-- Ícone -->
+    <link
+        rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🏥</text></svg>">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🏥 Recepção - Gestão de Chamadas</h1>
+
+                <div class="status-conexao">
+                    <span id="status-dot" class="status-dot desconectado"></span>
+                    <span id="status-texto">Desconectado</span>
+                </div>
+                <button id="btn-voice-config" class="btn btn-secondary" style="margin-left:12px">⚙️ Configurar Voz</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+          <div class="col-esquerda">
+            <!-- Seção: Registrar Novo Paciente -->
+            <section class="secao nova-senha card">
+                <h2>📝 Registrar Novo Paciente</h2>
+
+                <div class="form-group">
+                    <label for="nome-paciente">Nome completo do paciente:</label>
+                    <input type="text" id="nome-paciente" placeholder="Ex.: Maria Silva" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="sala-destino">Sala/Consultório:</label>
+                    <select id="sala-destino">
+                        <option value="triagem">Triagem</option>
+                        <option value="consultorio1">Consultório 1</option>
+                        <option value="consultorio2">Consultório 2</option>
+                        <option value="consultorio3">Consultório 3</option>
+                        <option value="raio-x">Sala de Raio-X</option>
+                        <option value="sutura">Sala de Sutura</option>
+                        <option value="medicacao">Sala de Medicação</option>
+                    </select>
+                </div>
+
+                <button id="btn-novo-paciente" class="btn btn-primary btn-lg">
+                    ✔ Registrar Paciente
+                </button>
+
+                <div id="mensagem-novo-paciente" class="mensagem"></div>
+            </section>
+
+
+            <!-- Seção: Fila Atual -->
+            <section class="secao fila-atual card">
+                <h2>📋 Fila Atual</h2>
+
+                <div id="lista-fila" class="lista-fila">
+                    <p class="vazio">Nenhum paciente na fila</p>
+                </div>
+            </section>
+          </div>
+
+
+          <div class="col-direita">
+            <!-- Seção: Controle de Chamadas -->
+            <section class="secao controle-chamadas card">
+                <h2>📢 Controle de Chamadas</h2>
+
+                <div class="botoes-controle">
+                    <button id="btn-chamar-proximo" class="btn btn-success btn-lg">
+                        ➡ Chamar Próximo
+                    </button>
+
+                    <button id="btn-rechamar" class="btn btn-warning btn-lg">
+                        🔄 Rechamar Última
+                    </button>
+                </div>
+
+                <div id="mensagem-chamada" class="mensagem"></div>
+
+                <div class="ultima-chamada">
+                    <h3>Última Chamada:</h3>
+                    <div id="display-ultima-chamada" class="display-chamada card-sub">
+                        <p class="vazio">Nenhuma chamada registrada</p>
+                    </div>
+                </div>
+            </section>
+                    
+            <!-- Seção: Rechamar para Nova Sala -->
+            <section class="secao rechamar-nova-sala card">
+                <h2>🔄 Rechamar Paciente para Nova Sala</h2>
+
+                <div class="form-group">
+                    <label for="nome-rechamada">Nome do Paciente:</label>
+                    <input type="text" id="nome-rechamada" placeholder="Digite o nome completo">
+                </div>
+
+                <div class="form-group">
+                    <label for="nova-sala">Nova Sala:</label>
+                    <select id="nova-sala">
+                        <option value="">Selecione…</option>
+                        <option value="triagem">Triagem</option>
+                        <option value="consultorio1">Consultório 1</option>
+                        <option value="consultorio2">Consultório 2</option>
+                        <option value="consultorio3">Consultório 3</option>
+                        <option value="raio-x">Sala de Raio-X</option>
+                        <option value="sutura">Sala de Sutura</option>
+                        <option value="medicacao">Sala de Medicação</option>
+                    </select>
+                </div>
+
+                <button id="btn-rechamar-nova-sala" class="btn btn-info">
+                    🔁 Rechamar Agora
+                </button>
+
+                <div id="mensagem-rechamada" class="mensagem"></div>
+            </section>
+         </div>
+
+        </main>
+
+        <!-- Painel de configuração de voz (iniciado oculto) -->
+        <div id="voice-config" class="card" style="display:none;margin:12px 18px;padding:12px">
+            <h3>Configurações de Voz</h3>
+            <div class="form-group">
+                <label for="voices-recep">Vozes disponíveis</label>
+                <select id="voices-recep" style="width:60%"></select>
+                <button id="btn-refresh-voices" class="btn">Atualizar</button>
+            </div>
+
+            <div class="form-group">
+                <label for="texto-recep">Texto de teste</label>
+                <input id="texto-recep" style="width:70%" value="Paciente João da Silva, dirigir-se à Sala de Triagem." />
+                <button id="btn-test-voice" class="btn btn-primary">Testar</button>
+            </div>
+
+            <small>Dica: use Chrome/Edge para melhores vozes TTS.</small>
+        </div>
+
+        <footer class="footer">
+            <p>Sistema de Gestão de Chamadas Hospitalar✔</p>
+        </footer>
+
+    </div>
+
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Config -->
+    <script src="static/js/firebase-config.js"></script>
+
+    <!-- Funções centrais -->
+    <script src="static/js/firestore-utils.js"></script>
+
+    <!-- Script modernizado da recepção -->
+    <script src="static/js/recepcao.js"></script>
+
+</body>
+
+</html>

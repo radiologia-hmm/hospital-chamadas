@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Coleção de pacientes
+    match /pacientes/{id} {
+      allow read, write: if request.time < timestamp.date(2030, 1, 1);
+    }
+
+    // Documento da última chamada
+    match /ultima_chamada/{doc} {
+      allow read, write: if request.time < timestamp.date(2030, 1, 1);
+    }
+  }
+}
