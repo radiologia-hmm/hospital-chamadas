@@ -10,6 +10,7 @@
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <script src="static/js/firebase-config.js"></script>
@@ -19,7 +20,14 @@
 <body>
 
     <header class="header">
-        <h1 id="titulo-sala">Sala</h1>
+        <div class="header-brand">
+            <img
+                class="header-logo"
+                src="static/img/logo-prefeitura-maraba.png"
+                alt="Prefeitura de Marabá - Secretaria Municipal de Saúde"
+                onerror="this.style.display='none'">
+            <h1 id="titulo-sala">Sala</h1>
+        </div>
         <button id="btn-sair" class="btn btn-danger btn-sair">Sair</button>
     </header>
 

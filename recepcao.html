@@ -22,13 +22,22 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1>🏥 Recepção - Gestão de Chamadas</h1>
-
-                <div class="status-conexao">
-                    <span id="status-dot" class="status-dot desconectado"></span>
-                    <span id="status-texto">Desconectado</span>
+                <div class="header-brand">
+                    <img
+                        class="header-logo"
+                        src="static/img/logo-prefeitura-maraba.png"
+                        alt="Prefeitura de Marabá - Secretaria Municipal de Saúde"
+                        onerror="this.style.display='none'">
+                    <h1>🏥 Recepção - Gestão de Chamadas</h1>
                 </div>
-                <button id="btn-voice-config" class="btn btn-secondary" style="margin-left:12px">⚙️ Configurar Voz</button>
+
+                <div class="header-actions">
+                    <div class="status-conexao">
+                        <span id="status-dot" class="status-dot desconectado"></span>
+                        <span id="status-texto">Desconectado</span>
+                    </div>
+                    <button id="btn-voice-config" class="btn btn-secondary" style="margin-left:12px">⚙️ Configurar Voz</button>
+                </div>
             </div>
         </header>
 

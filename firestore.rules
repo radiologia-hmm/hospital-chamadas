@@ -4,13 +4,20 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Coleção de pacientes
+    // Modo aberto: sem exigência de login/senha para operação da recepção.
     match /pacientes/{id} {
-      allow read, write: if request.time < timestamp.date(2030, 1, 1);
+      allow create, read, update, delete: if true;
     }
 
     // Documento da última chamada
+    // Modo aberto para atualização do painel e da recepção sem login.
     match /ultima_chamada/{doc} {
-      allow read, write: if request.time < timestamp.date(2030, 1, 1);
+      allow read, write: if true;
+    }
+
+    // Fallback: negar qualquer outro acesso
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

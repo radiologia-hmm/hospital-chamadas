@@ -11,19 +11,19 @@ Aplicação web estática para gerenciar chamadas de pacientes em postos/consult
 - Registrar pacientes (Recepção) com `nomeCompleto`, `nomePublico`, `salaDestino`, `status`.
 - Chamar próximo paciente por sala (Sala) e atualizar `ultima_chamada` para painel e demais listeners.
 - Painel de TV que anuncia por voz e mostra próximos pacientes.
-- Teste local de síntese de voz (`test_voice.html`) para ajustar vozes, rate e pitch.
+- Configuração local de síntese de voz na tela de recepção para ajustar vozes, rate e pitch.
 
 ---
 
 ## Estrutura principal
 
-- `login-salas.html` — Login simples das salas (localStorage).
+- `login-salas.html` — Login das salas via Firebase Auth.
 - `recepcao.html` — Interface de recepção para registrar pacientes.
 - `sala.html` — Interface para cada sala/consultório.
 - `painel.html` — Painel de TV para anúncios e fila.
 - `static/js/firebase-config.js` — Configuração do Firebase (preencher com seu projeto).
 - `static/js/firestore-utils.js` — Funções centrais de leitura/gravação no Firestore.
-- `test_voice.html` — Página local para testar e escolher vozes TTS.
+- Configurações de voz na tela de recepção para testar e escolher vozes TTS.
 
 ---
 
@@ -48,7 +48,7 @@ python -m http.server 8000
 # e abra http://localhost:8000/painel.html
 ```
 
-4. Ajuste vozes e teste com `test_voice.html` antes de usar o painel em produção.
+4. Ajuste vozes e teste pela seção de voz da tela de recepção antes de usar o painel em produção.
 
 ---
 
@@ -142,6 +142,63 @@ Escolha uma licença adequada ao seu uso (por exemplo MIT).
 
 ---
 
-Arquivo de teste de voz: [test_voice.html](test_voice.html)
-
 Arquivo de configuração do Firebase: `static/js/firebase-config.js`
+
+---
+
+**Deployment & Admin (rápido)**
+
+- **Login no Firebase CLI** (no seu computador):
+
+```bash
+firebase login
+# selecione o projeto com `firebase use --add` se precisar
+```
+
+- **Publicar apenas as regras do Firestore** (quando ajustar `firestore.rules`):
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+- **Publicar hosting (se estiver usando Firebase Hosting)**:
+
+```bash
+firebase deploy --only hosting
+```
+
+- **Criar usuário 'recepcao' e atribuir claim (Admin SDK - Node.js)**
+
+1. Gere/tenha o JSON de credenciais do Admin SDK (Service Account).
+2. Execute um script Node.js (exemplo):
+
+```js
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+
+async function criarRecepcao() {
+	const user = await admin.auth().createUser({
+		email: 'recepcao@salas.hospital',
+		password: 'SenhaSegura123'
+	});
+	await admin.auth().setCustomUserClaims(user.uid, { role: 'recepcao' });
+	console.log('Usuário recepção criado:', user.uid);
+}
+
+criarRecepcao().catch(console.error);
+```
+
+Depois disso, a conta `recepcao@salas.hospital` fará login em `login-recepcao.html`.
+
+- **Criar contas de Sala** (ex.: `consultorio1@salas.hospital`) e atribuir claim `{ role: 'sala', sala: 'consultorio1' }` usando o mesmo Admin SDK.
+
+**Testes rápidos após deploy das regras**
+
+- Abra `login-recepcao.html` e tente logar com a conta da recepção.
+- Abra `login-salas.html` e logue com uma conta de sala; acesse `sala.html?sala=consultorio1`.
+- Abra `painel.html` — o painel agora faz autenticação anônima automaticamente para leitura.
+
+Se algo não funcionar, verifique o console do navegador (autenticação/erros de permissão) e confirme no Console do Firebase se os custom claims foram definidos no usuário.
+

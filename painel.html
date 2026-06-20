@@ -18,7 +18,14 @@
 
     <!-- Cabeçalho -->
     <header class="painel-header">
-        <h1>Sistema de Chamadas - HMM</h1>
+        <div class="header-brand">
+            <img
+                class="header-logo"
+                src="static/img/logo-prefeitura-maraba.png"
+                alt="Prefeitura de Marabá - Secretaria Municipal de Saúde"
+                onerror="this.style.display='none'">
+            <h1>Sistema de Chamadas - HMM</h1>
+        </div>
 
         <div class="status-conexao">
             <div id="status-dot" class="status-dot desconectado"></div>
@@ -120,6 +127,25 @@ function speakPTBR(text) {
     } else {
         speak();
     }
+}
+
+// ============================================================
+// Autenticação mínima: sign-in anônimo para permitir leitura
+// ============================================================
+if (firebase && firebase.auth) {
+    firebase.auth().onAuthStateChanged(user => {
+        if (!user) {
+            // sign in anonymously so the panel can read from Firestore
+            firebase.auth().signInAnonymously().catch(err => {
+                console.error('Falha signInAnonymously:', err);
+                atualizarStatus(false);
+            });
+        } else {
+            atualizarStatus(true);
+        }
+    });
+} else {
+    console.warn('Firebase Auth não disponível. Verifique inclusões de SDK.');
 }
 
 /* ============================================================

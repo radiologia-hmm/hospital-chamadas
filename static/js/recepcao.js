@@ -1,8 +1,17 @@
-console.log("DEBUG MODE ATIVO — RECEPÇÃO");
+// Recepção sem login/senha (modo aberto)
+document.querySelectorAll('button, input, select').forEach(el => el.disabled = false);
 
-listenFilaCompleta((snapshot) => {
-    console.log("SNAPSHOT FILA:", snapshot.docs.map(d => d.data()));
-});
+const statusTexto = document.getElementById('status-texto');
+if (statusTexto) statusTexto.textContent = 'Conectado (sem login)';
+
+const statusDot = document.getElementById('status-dot');
+if (statusDot) {
+    statusDot.classList.remove('desconectado');
+    statusDot.classList.add('conectado');
+}
+
+const overlay = document.getElementById('auth-overlay');
+if (overlay) overlay.remove();
 // ==========================
 // TTS helper (configuração local)
 // ==========================
@@ -36,35 +45,35 @@ function speakPTBR(text, preferredVoiceName=null) {
 // =====================================================
 
 // Registrar novo paciente
-document.getElementById("btn-novo-paciente").addEventListener("click", async () => {
-    const nome = document.getElementById("nome-paciente").value.trim();
-    const sala = document.getElementById("sala-destino").value;
-    const msg = document.getElementById("mensagem-novo-paciente");
+document.getElementById('btn-novo-paciente').addEventListener('click', async () => {
+    const nome = document.getElementById('nome-paciente').value.trim();
+    const sala = document.getElementById('sala-destino').value;
+    const msg = document.getElementById('mensagem-novo-paciente');
 
-    msg.textContent = "";
+    msg.textContent = '';
 
     const r = await registrarPaciente(nome, sala);
 
     if (!r.sucesso) {
         msg.textContent = r.erro;
-        msg.className = "mensagem erro";
+        msg.className = 'mensagem erro';
         return;
     }
 
-    msg.textContent = "Paciente registrado com sucesso!";
-    msg.className = "mensagem sucesso";
+    msg.textContent = 'Paciente registrado com sucesso!';
+    msg.className = 'mensagem sucesso';
 });
 
 // LISTENER — Fila atual
 listenFilaCompleta((snapshot) => {
-    const lista = document.getElementById("lista-fila");
+    const lista = document.getElementById('lista-fila');
 
     if (snapshot.empty) {
-        lista.innerHTML = `<p class="vazio">Nenhum paciente</p>`;
+        lista.innerHTML = '<p class="vazio">Nenhum paciente</p>';
         return;
     }
 
-    let html = "";
+    let html = '';
     snapshot.forEach(doc => {
         const p = doc.data();
         html += `
@@ -79,39 +88,39 @@ listenFilaCompleta((snapshot) => {
 });
 
 // CHAMAR PRÓXIMO
-document.getElementById("btn-chamar-proximo").addEventListener("click", async () => {
-    const sala = document.getElementById("sala-destino").value;
-    const msg = document.getElementById("mensagem-chamada");
+document.getElementById('btn-chamar-proximo').addEventListener('click', async () => {
+    const sala = document.getElementById('sala-destino').value;
+    const msg = document.getElementById('mensagem-chamada');
 
     const r = await chamarProximoDaSala(sala);
 
     if (!r.sucesso) {
         msg.textContent = r.erro;
-        msg.className = "mensagem erro";
+        msg.className = 'mensagem erro';
         return;
     }
 
     msg.textContent = `Chamado: ${r.paciente.nomePublico}`;
-    msg.className = "mensagem sucesso";
+    msg.className = 'mensagem sucesso';
 });
 
 // RECHAMAR ÚLTIMA
-document.getElementById("btn-rechamar").addEventListener("click", async () => {
-    const msg = document.getElementById("mensagem-chamada");
+document.getElementById('btn-rechamar').addEventListener('click', async () => {
+    const msg = document.getElementById('mensagem-chamada');
 
-    const snap = await db.collection("ultima_chamada").doc("atual").get();
+    const snap = await db.collection('ultima_chamada').doc('atual').get();
     if (!snap.exists) {
-        msg.textContent = "Nenhuma chamada registrada ainda.";
-        msg.className = "mensagem info";
+        msg.textContent = 'Nenhuma chamada registrada ainda.';
+        msg.className = 'mensagem info';
         return;
     }
 
-    await db.collection("ultima_chamada").doc("atual").update({
+    await db.collection('ultima_chamada').doc('atual').update({
         repetir: Date.now()
     });
 
-    msg.textContent = "Chamada repetida!";
-    msg.className = "mensagem sucesso";
+    msg.textContent = 'Chamada repetida!';
+    msg.className = 'mensagem sucesso';
 });
 
 // ==========================

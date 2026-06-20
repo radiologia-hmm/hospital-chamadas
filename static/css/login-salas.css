@@ -1,15 +1,19 @@
 :root {
-    --bg: #0f172a;
-    --bg-card: #1e293b;
-    --bg-card-light: #243044;
-    --text: #e2e8f0;
-    --text-muted: #94a3b8;
-    --accent: #3b82f6;
-    --danger: #ef4444;
+    --bg: #eef7fb;
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --bg-card-light: #f4fbff;
+    --text: #12313f;
+    --text-muted: #5e7883;
+    --line: rgba(18, 49, 63, 0.16);
+    --accent: #1d7fdb;
+    --danger: #e04545;
 }
 
 body {
-    background: var(--bg);
+    background:
+        radial-gradient(circle at 12% 18%, rgba(24, 146, 190, 0.16), transparent 34%),
+        radial-gradient(circle at 88% 10%, rgba(27, 153, 104, 0.13), transparent 28%),
+        linear-gradient(130deg, #f5fbff, var(--bg));
     color: var(--text);
     font-family: "Segoe UI", Arial, sans-serif;
     padding: 20px;
@@ -22,7 +26,21 @@ body {
     margin: 40px auto;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 0 14px #0006;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 24px rgba(24, 92, 120, 0.12);
+}
+
+.login-brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.login-logo {
+    display: block;
+    width: min(100%, 360px);
+    max-height: 70px;
+    object-fit: contain;
 }
 
 h1 {
@@ -48,7 +66,7 @@ select {
     background: var(--bg-card-light);
     color: var(--text);
     border-radius: 6px;
-    border: 1px solid #2d3a50;
+    border: 1px solid rgba(18, 49, 63, 0.22);
 }
 
 .btn {
@@ -63,7 +81,7 @@ select {
 }
 
 .btn:hover {
-    background: #60a5fa;
+    background: #52a2ec;
 }
 
 .mensagem {
@@ -73,4 +91,11 @@ select {
 
 .mensagem.erro {
     color: var(--danger);
+}
+
+@media (max-width: 620px) {
+    .login-logo {
+        width: min(100%, 300px);
+        max-height: 58px;
+    }
 }

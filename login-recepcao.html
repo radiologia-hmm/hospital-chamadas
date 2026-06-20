@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://www.gstatic.com https://fonts.googleapis.com;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Recepção</title>
+    <link rel="stylesheet" href="static/css/login-salas.css">
+</head>
+<body>
+
+    <div class="login-container card">
+        <div class="login-brand">
+            <img
+                class="login-logo"
+                src="static/img/logo-prefeitura-maraba.png"
+                alt="Prefeitura de Marabá - Secretaria Municipal de Saúde"
+                onerror="this.style.display='none'">
+        </div>
+
+        <h1>🏥 Acesso Recepção</h1>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="recepcao@salas.hospital" autocomplete="username">
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" placeholder="Digite a senha" autocomplete="current-password">
+        </div>
+
+        <button id="btn-entrar" class="btn btn-primary btn-lg">Entrar</button>
+
+        <div id="msg-login" class="mensagem"></div>
+
+        <p style="margin-top:18px;font-size:0.9em">Usar conta com claim <strong>role: 'recepcao'</strong>. <a href="login-salas.html">Login salas</a></p>
+    </div>
+
+    <!-- Firebase (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="static/js/firebase-config.js"></script>
+    <script src="static/js/login-recepcao.js"></script>
+</body>
+</html>
